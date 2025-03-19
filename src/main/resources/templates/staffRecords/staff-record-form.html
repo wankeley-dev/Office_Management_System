@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Record Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0fff0;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #008000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #008000;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: #008000;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #008000;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #008000;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #006400;
+        }
+
+        footer {
+            background-color: #ddd;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                width: 95%;
+            }
+            input, select, textarea, button {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+            label {
+                font-size: 0.9rem;
+            }
+            input, select, textarea, button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Staff Record Form</h1>
+    <p>Add or edit staff records.</p>
+</header>
+
+<main class="main-content">
+    <div class="form-container">
+        <h2>Add/Edit Staff Record</h2>
+        <form th:action="@{/staff-records/add}" method="post" th:object="${staffRecord}">
+            <input type="hidden" th:field="*{id}">
+
+            <label for="fullName"><i class="fas fa-user"></i> Full Name:</label>
+            <input type="text" id="fullName" th:field="*{fullName}" required>
+
+            <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+
+            <label for="phoneNumber"><i class="fas fa-phone"></i> Phone Number:</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" required>
+
+            <label for="department"><i class="fas fa-building"></i> Department:</label>
+            <input type="text" id="department" th:field="*{department}" required>
+
+            <label for="position"><i class="fas fa-briefcase"></i> Position:</label>
+            <input type="text" id="position" th:field="*{position}" required>
+
+            <label for="dateOfHire"><i class="fas fa-calendar-alt"></i> Date of Hire:</label>
+            <input type="date" id="dateOfHire" th:field="*{dateOfHire}" required>
+
+            <label for="employmentType"><i class="fas fa-user-clock"></i> Employment Type:</label>
+            <select id="employmentType" th:field="*{employmentType}">
+                <option value="" disabled selected>Select Employment Type</option>
+                <option value="FULL_TIME">Full-Time</option>
+                <option value="PART_TIME">Part-Time</option>
+                <option value="CONTRACT">Contract</option>
+            </select>
+
+            <label for="salary"><i class="fas fa-cedi-sign"></i> Salary:</label>
+            <input type="number" id="salary" th:field="*{salary}">
+
+            <label for="benefits"><i class="fas fa-gift"></i> Benefits:</label>
+            <textarea id="benefits" th:field="*{benefits}" rows="4"></textarea>
+
+            <button type="submit"><i class="fas fa-save"></i> Save</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

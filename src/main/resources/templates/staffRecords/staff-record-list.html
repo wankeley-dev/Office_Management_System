@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Records</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0fff0;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #008000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #008000;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #008000;
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            font-weight: 600;
+        }
+
+        th i, td i {
+            margin-right: 8px;
+            color: #fff;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        tbody td i {
+            color: #008000;
+        }
+
+        a {
+            color: #008000;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #006400;
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #ddd;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            th, td {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+            .form-container {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead {
+                display: none;
+            }
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            td {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+            td:last-child {
+                border-bottom: none;
+            }
+            td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #008000;
+                margin-right: 10px;
+            }
+            td i {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>All Staff Records</h1>
+    <p>View and manage staff records.</p>
+</header>
+
+<main class="main-content">
+    <div class="form-container">
+        <h2>All Staff Records</h2>
+        <table>
+            <thead>
+            <tr>
+                <th><i class="fas fa-user"></i> Full Name</th>
+                <th><i class="fas fa-envelope"></i> Email</th>
+                <th><i class="fas fa-phone"></i> Phone</th>
+                <th><i class="fas fa-building"></i> Department</th>
+                <th><i class="fas fa-briefcase"></i> Position</th>
+                <th><i class="fas fa-calendar-alt"></i> Date Of Hire</th>
+                <th><i class="fas fa-cedi-sign"></i> Salary</th>
+                <th><i class="fas fa-gift"></i> Benefits</th>
+                <th><i class="fas fa-user-clock"></i> Employment Type</th>
+                <th><i class="fas fa-cogs"></i> Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="staff : ${staffRecords}">
+                <td data-label="Full Name"><i class="fas fa-user"></i> <span th:text="${staff.fullName}"></span></td>
+                <td data-label="Email"><i class="fas fa-envelope"></i> <span th:text="${staff.email}"></span></td>
+                <td data-label="Phone"><i class="fas fa-phone"></i> <span th:text="${staff.phoneNumber}"></span></td>
+                <td data-label="Department"><i class="fas fa-building"></i> <span th:text="${staff.department}"></span></td>
+                <td data-label="Position"><i class="fas fa-briefcase"></i> <span th:text="${staff.position}"></span></td>
+                <td data-label="Date Of Hire"><i class="fas fa-calendar-alt"></i> <span th:text="${staff.dateOfHire}"></span></td>
+                <td data-label="Salary"><i class="fas fa-cedi-sign"></i> <span th:text="${staff.salary}"></span></td>
+                <td data-label="Benefits"><i class="fas fa-gift"></i> <span th:text="${staff.benefits}"></span></td>
+                <td data-label="Employment Type"><i class="fas fa-user-clock"></i> <span th:text="${staff.employmentType}"></span></td>
+                <td data-label="Actions">
+                    <a th:href="@{/staff-records/edit/{id}(id=${staff.id})}"><i class="fas fa-edit"></i> Edit</a>
+                    <a th:href="@{/staff-records/delete/{id}(id=${staff.id})}" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

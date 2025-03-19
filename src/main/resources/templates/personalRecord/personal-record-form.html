@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Record Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0fff0;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #008000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #008000;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .form-container h3 {
+            color: #008000;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: #008000;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #008000;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .back-link:hover {
+            color: #006400;
+            text-decoration: underline;
+        }
+
+        input:focus, select:focus {
+            border-color: #008000;
+            outline: none;
+        }
+
+        button {
+            background-color: #008000;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #006400;
+        }
+
+        footer {
+            background-color: #ddd;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                width: 95%;
+            }
+            input, select, button {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+            label {
+                font-size: 0.9rem;
+            }
+            input, select, button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Personal Record Form</h1>
+    <p>Submit your personal record details.</p>
+</header>
+
+<main class="main-content">
+    <div class="form-container">
+        <h2>Submit Personal Record</h2>
+        <form th:action="@{/personal-records/submit}" method="post" th:object="${personalRecord}">
+            <label for="fullName"><i class="fas fa-user"></i> Full Name:</label>
+            <input type="text" id="fullName" name="fullName" th:field="*{fullName}" required>
+
+            <label for="gender"><i class="fas fa-venus-mars"></i> Gender:</label>
+            <select id="gender" name="gender" th:field="*{gender}">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="dateOfBirth"><i class="fas fa-calendar-alt"></i> Date of Birth:</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" th:field="*{dateOfBirth}" required>
+
+            <label for="address"><i class="fas fa-home"></i> Address:</label>
+            <input type="text" id="address" name="address" th:field="*{address}" required>
+
+            <label for="phoneNumber"><i class="fas fa-phone"></i> Phone Number:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}" required>
+
+            <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="email" name="email" th:field="*{email}" required>
+
+            <label for="position"><i class="fas fa-briefcase"></i> Position:</label>
+            <input type="text" id="position" name="position" th:field="*{position}" required>
+
+            <label for="department"><i class="fas fa-building"></i> Department:</label>
+            <input type="text" id="department" name="department" th:field="*{department}" required>
+
+            <label for="dateOfEmployment"><i class="fas fa-calendar-check"></i> Date of Employment:</label>
+            <input type="date" id="dateOfEmployment" name="dateOfEmployment" th:field="*{dateOfEmployment}" required>
+
+            <h3>Emergency Contact Information</h3>
+
+            <label for="emergencyContactName"><i class="fas fa-user-shield"></i> Emergency Contact Name:</label>
+            <input type="text" id="emergencyContactName" name="emergencyContactName" th:field="*{emergencyContactName}" required>
+
+            <label for="emergencyContactPhone"><i class="fas fa-phone"></i> Emergency Contact Phone:</label>
+            <input type="text" id="emergencyContactPhone" name="emergencyContactPhone" th:field="*{emergencyContactPhone}" required>
+
+            <label for="emergencyContactRelation"><i class="fas fa-users"></i> Emergency Contact Relation:</label>
+            <input type="text" id="emergencyContactRelation" name="emergencyContactRelation" th:field="*{emergencyContactRelation}" required>
+
+            <button type="submit"><i class="fas fa-paper-plane"></i> Submit</button>
+        </form>
+        <a class="back-link" href="//personal-records/list">View My Records</a>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

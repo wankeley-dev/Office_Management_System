@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Advance Requests</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0fff0;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #008000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #008000;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #008000;
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            font-weight: 600;
+        }
+
+        th i, td i {
+            margin-right: 8px;
+            color: #fff;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        tbody td i {
+            color: #008000;
+        }
+
+        td.status-pending { color: #f39c12; font-weight: bold; }
+        td.status-approved { color: #008000; font-weight: bold; }
+        td.status-rejected { color: #e74c3c; font-weight: bold; }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: white;
+        }
+
+        button.approve-btn {
+            background-color: #008000;
+            margin-right: 5px;
+        }
+
+        button.approve-btn:hover {
+            background-color: #006400;
+        }
+
+        button.reject-btn {
+            background-color: #e74c3c;
+        }
+
+        button.reject-btn:hover {
+            background-color: #c0392b;
+        }
+
+        form {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        input[type="text"] {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background-color: #ddd;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            th, td {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+            .form-container {
+                width: 95%;
+            }
+            button, input[type="text"] {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead {
+                display: none;
+            }
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            td {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+            td:last-child {
+                border-bottom: none;
+            }
+            td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #008000;
+                margin-right: 10px;
+            }
+            td i {
+                display: none;
+            }
+            form {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+            }
+            input[type="text"], button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>All Salary Advance Requests</h1>
+    <p>Manage employee salary advance requests.</p>
+</header>
+
+<main class="main-content">
+    <div class="form-container">
+        <h2>All Salary Advance Requests</h2>
+        <table>
+            <thead>
+            <tr>
+                <th><i class="fas fa-id-badge"></i> ID</th>
+                <th><i class="fas fa-user"></i> Employee</th>
+                <th><i class="fas fa-cedi-sign"></i> Amount</th>
+                <th><i class="fas fa-comment"></i> Reason</th>
+                <th><i class="fas fa-calendar-alt"></i> Request Date</th>
+                <th><i class="fas fa-info-circle"></i> Status</th>
+                <th><i class="fas fa-sticky-note"></i> Remarks</th>
+                <th><i class="fas fa-cogs"></i> Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="advance : ${salaryAdvances}">
+                <td data-label="ID"><i class="fas fa-id-badge"></i> <span th:text="${advance.id}"></span></td>
+                <td data-label="Employee"><i class="fas fa-user"></i> <span th:text="${advance.user.fullName}"></span></td>
+                <td data-label="Amount"><i class="fas fa-cedi-sign"></i> <span th:text="${advance.amountRequested}"></span></td>
+                <td data-label="Reason"><i class="fas fa-comment"></i> <span th:text="${advance.reason}"></span></td>
+                <td data-label="Request Date"><i class="fas fa-calendar-alt"></i> <span th:text="${advance.requestDate}"></span></td>
+                <td data-label="Status" th:classappend="'status-' + ${advance.approvalStatus.toString().toLowerCase()}"><i class="fas fa-info-circle"></i> <span th:text="${advance.approvalStatus}"></span></td>
+                <td data-label="Remarks"><i class="fas fa-sticky-note"></i> <span th:text="${advance.remarks}"></span></td>
+                <td data-label="Actions">
+                    <form th:action="@{/salary-advance/approve/{id}(id=${advance.id})}" method="post">
+                        <input type="text" name="remarks" placeholder="Approval remarks">
+                        <button type="submit" class="approve-btn"><i class="fas fa-check"></i> Approve</button>
+                    </form>
+                    <form th:action="@{/salary-advance/reject/{id}(id=${advance.id})}" method="post">
+                        <input type="text" name="remarks" placeholder="Rejection remarks">
+                        <button type="submit" class="reject-btn"><i class="fas fa-times"></i> Reject</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Report Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0fff0;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #008000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #008000;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: #008000;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #008000;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #008000;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #006400;
+        }
+
+        footer {
+            background-color: #ddd;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                width: 95%;
+            }
+            input, select, textarea, button {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+            label {
+                font-size: 0.9rem;
+            }
+            input, select, textarea, button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Medical Report Form</h1>
+    <p>Add or edit medical reports for staff.</p>
+</header>
+
+<main class="main-content">
+    <div class="form-container">
+        <h2>Add/Edit Medical Report</h2>
+        <form th:action="@{/medical-reports/add}" method="post" th:object="${medicalReport}">
+            <input type="hidden" th:field="*{id}">
+
+            <label for="staff"><i class="fas fa-user"></i> Staff Member:</label>
+            <select id="staff" th:field="*{staff}">
+                <option value="" disabled selected>Select Staff Member</option>
+                <option th:each="staff : ${staffRecords}" th:value="${staff.id}" th:text="${staff.fullName}"></option>
+            </select>
+
+            <label for="reportDate"><i class="fas fa-calendar-alt"></i> Report Date:</label>
+            <input type="date" id="reportDate" th:field="*{reportDate}" required>
+
+            <label for="diagnosis"><i class="fas fa-stethoscope"></i> Diagnosis:</label>
+            <textarea id="diagnosis" th:field="*{diagnosis}" rows="4" required></textarea>
+
+            <label for="prescribedTreatment"><i class="fas fa-prescription"></i> Prescribed Treatment:</label>
+            <textarea id="prescribedTreatment" th:field="*{prescribedTreatment}" rows="4" required></textarea>
+
+            <label for="doctorNotes"><i class="fas fa-notes-medical"></i> Doctor's Notes:</label>
+            <textarea id="doctorNotes" th:field="*{doctorNotes}" rows="4"></textarea>
+
+            <label for="status"><i class="fas fa-info-circle"></i> Status:</label>
+            <select id="status" th:field="*{status}">
+                <option value="" disabled selected>Select Status</option>
+                <option value="PENDING">Pending</option>
+                <option value="REVIEWED">Reviewed</option>
+                <option value="APPROVED">Approved</option>
+            </select>
+
+            <button type="submit"><i class="fas fa-save"></i> Save</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

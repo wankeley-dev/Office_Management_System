@@ -26,7 +26,7 @@ public class LeaveRequestController {
     @GetMapping("/form")
     public String showLeaveRequestForm(Model model) {
         model.addAttribute("leaveRequest", new LeaveRequest());
-        return "leaveRequestForm";  // Refers to 'leaveRequestForm.html' in Thymeleaf templates
+        return "/leaveRequest/leaveRequestForm";  // Refers to 'leaveRequestForm.html' in Thymeleaf templates
     }
 
     // Submit a leave request (form submission)
@@ -55,7 +55,7 @@ public class LeaveRequestController {
     public String getUserLeaveRequests(@PathVariable Long userId, Model model) {
         List<LeaveRequest> leaveRequests = leaveRequestService.getLeaveRequestsByUser(userId);
         model.addAttribute("leaveRequests", leaveRequests);
-        return "userLeaveRequests";  // Refers to 'userLeaveRequests.html' in Thymeleaf templates
+        return "/leaveRequest/userLeaveRequests";  // Refers to 'userLeaveRequests.html' in Thymeleaf templates
     }
 
     // Approve a leave request
@@ -77,7 +77,7 @@ public class LeaveRequestController {
     public String listAllLeaveRequests(Model model) {
         List<LeaveRequest> leaveRequests = leaveRequestService.getAllLeaveRequests();
         model.addAttribute("leaveRequests", leaveRequests);
-        return "userLeaveRequests";  // Refers to 'leaveRequestList.html' in Thymeleaf templates
+        return "/leaveRequest/userLeaveRequests";  // Refers to 'leaveRequestList.html' in Thymeleaf templates
     }
 
     // Display all leave requests (for admin)
@@ -85,6 +85,6 @@ public class LeaveRequestController {
     public String AdminListAllLeaveRequests(Model model) {
         List<LeaveRequest> leaveRequests = leaveRequestService.getAllLeaveRequests();
         model.addAttribute("leaveRequests", leaveRequests);
-        return "leaveRequestList";  // Refers to 'leaveRequestList.html' in Thymeleaf templates
+        return "/leaveRequest/leaveRequestList";  // Refers to 'leaveRequestList.html' in Thymeleaf templates
     }
 }

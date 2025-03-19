@@ -29,7 +29,7 @@ public class AccommodationRequestController {
     @GetMapping("/submit")
     public String showAccommodationRequestForm(Model model) {
         model.addAttribute("accommodationRequest", new AccommodationRequest());
-        return "accommodation-request-form"; // Thymeleaf template name
+        return "/accommodation/accommodation-request-form"; // Thymeleaf template name
     }
 
     // Handle form submission for accommodation request
@@ -58,7 +58,7 @@ public class AccommodationRequestController {
     public String getAccommodationRequestsByUser(@PathVariable Long userId, Model model) {
         List<AccommodationRequest> requests = accommodationRequestService.getAccommodationRequestsByUser(userId);
         model.addAttribute("requests", requests);
-        return "userAccommodationRequest"; // Thymeleaf template name
+        return "/accommodation/userAccommodationRequest"; // Thymeleaf template name
     }
 
     // Approve an accommodation request
@@ -79,7 +79,7 @@ public class AccommodationRequestController {
     public String listAllAccommodationRequests(Model model) {
         List<AccommodationRequest> requests = accommodationRequestService.getAllAccommodationRequests();
         model.addAttribute("requests", requests);
-        return "userAccommodationRequest"; // Thymeleaf template name
+        return "/accommodation/userAccommodationRequest"; // Thymeleaf template name
     }
 
     // Display all accommodation requests (for admin)
@@ -87,7 +87,7 @@ public class AccommodationRequestController {
     public String AdminListAllAccommodationRequests(Model model) {
         List<AccommodationRequest> requests = accommodationRequestService.getAllAccommodationRequests();
         model.addAttribute("requests", requests);
-        return "accommodation-request-list"; // Thymeleaf template name
+        return "/accommodation/accommodation-request-list"; // Thymeleaf template name
     }
 
 
