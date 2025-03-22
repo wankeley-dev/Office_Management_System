@@ -1,7 +1,9 @@
 package com.example.Office.Management.System.Service;
 
 import com.example.Office.Management.System.Entity.ServiceRequest;
+import com.example.Office.Management.System.Entity.User;
 import com.example.Office.Management.System.Repository.ServiceRequestRepository;
+import com.example.Office.Management.System.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +17,28 @@ public class ServiceRequestService {
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+
     // Submit a new service request
     public ServiceRequest submitServiceRequest(ServiceRequest request) {
+
+        User hrAdmin = getHRAdmin();
+        if (hrAdmin != null) {
+            notificationService.createNotification("New Service request submitted by " + request.getUser().getFullName(), hrAdmin);
+        }
+
         return serviceRequestRepository.save(request);
     }
+
+    private User getHRAdmin() {
+        return userRepository.findByRole(User.Role.ADMIN); // Assuming Role is an ENUM
+
+    }
+
 
     // Get all service requests for a specific user
     public List<ServiceRequest> getServiceRequestsByUser(Long userId) {
@@ -37,6 +57,8 @@ public class ServiceRequestService {
         if (optionalRequest.isPresent()) {
             ServiceRequest request = optionalRequest.get();
             request.setStatus(ServiceRequest.RequestStatus.APPROVED);
+            notificationService.createNotification("Your Service request has been approved.", request.getUser());
+
             return serviceRequestRepository.save(request);
         } else {
             throw new RuntimeException("Service request not found with ID: " + requestId);
@@ -50,6 +72,7 @@ public class ServiceRequestService {
         if (optionalRequest.isPresent()) {
             ServiceRequest request = optionalRequest.get();
             request.setStatus(ServiceRequest.RequestStatus.REJECTED);
+            notificationService.createNotification("Your Vehicle request has been approved.", request.getUser());
             return serviceRequestRepository.save(request);
         } else {
             throw new RuntimeException("Service request not found with ID: " + requestId);

@@ -1,6 +1,7 @@
 package com.example.Office.Management.System.Service;
 
 import com.example.Office.Management.System.Entity.TransportAllowance;
+import com.example.Office.Management.System.Entity.User;
 import com.example.Office.Management.System.Repository.TransportAllowanceRepository;
 import com.example.Office.Management.System.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,22 @@ public class TransportAllowanceService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public TransportAllowance saveTransportAllowance(TransportAllowance transportAllowance) {
+
+        // Get HR/Admin and notify them
+        User hrAdmin = getHRAdmin();
+        if (hrAdmin != null) {
+            notificationService.createNotification("New leave request submitted by " + transportAllowance.getUser().getFullName(), hrAdmin);
+        }
         return transportAllowanceRepository.save(transportAllowance);
+    }
+
+    private User getHRAdmin() {
+        return userRepository.findByRole(User.Role.ADMIN); // Assuming Role is an ENUM
+
     }
 
     public List<TransportAllowance> getTransportAllowancesByUser(Long userId) {
@@ -40,6 +55,8 @@ public class TransportAllowanceService {
             TransportAllowance transportAllowance = optionalTransportAllowance.get();
             transportAllowance.setApprovalStatus(TransportAllowance.ApprovalStatus.valueOf(status));
             transportAllowance.setRemarks(remarks);
+            // Notify the user
+            notificationService.createNotification("Your Transport request has been approved.", transportAllowance.getUser());
             return transportAllowanceRepository.save(transportAllowance);
         }
         return null;

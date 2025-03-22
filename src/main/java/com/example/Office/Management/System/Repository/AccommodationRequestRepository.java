@@ -14,4 +14,5 @@ public interface AccommodationRequestRepository extends JpaRepository<Accommodat
 
     // Find all accommodation requests by status
     List<AccommodationRequest> findByStatus(AccommodationRequest.Status status);
+
 }

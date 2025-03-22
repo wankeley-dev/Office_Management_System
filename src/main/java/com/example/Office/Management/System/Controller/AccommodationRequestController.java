@@ -29,7 +29,7 @@ public class AccommodationRequestController {
     @GetMapping("/submit")
     public String showAccommodationRequestForm(Model model) {
         model.addAttribute("accommodationRequest", new AccommodationRequest());
-        return "/accommodation/accommodation-request-form"; // Thymeleaf template name
+        return "/accommodation/accommodation-request-form";
     }
 
     // Handle form submission for accommodation request
@@ -50,7 +50,7 @@ public class AccommodationRequestController {
         accommodationRequest.setUser(user);
 
         accommodationRequestService.submitAccommodationRequest(accommodationRequest);
-        return "redirect:/accommodation-requests/list"; // Redirect after submission
+        return "redirect:/accommodation-requests/list";
     }
 
     // Display list of accommodation requests for a specific user
@@ -58,7 +58,7 @@ public class AccommodationRequestController {
     public String getAccommodationRequestsByUser(@PathVariable Long userId, Model model) {
         List<AccommodationRequest> requests = accommodationRequestService.getAccommodationRequestsByUser(userId);
         model.addAttribute("requests", requests);
-        return "/accommodation/userAccommodationRequest"; // Thymeleaf template name
+        return "/accommodation/userAccommodationRequest";
     }
 
     // Approve an accommodation request
@@ -79,16 +79,23 @@ public class AccommodationRequestController {
     public String listAllAccommodationRequests(Model model) {
         List<AccommodationRequest> requests = accommodationRequestService.getAllAccommodationRequests();
         model.addAttribute("requests", requests);
-        return "/accommodation/userAccommodationRequest"; // Thymeleaf template name
+        return "/accommodation/userAccommodationRequest";
     }
 
     // Display all accommodation requests (for admin)
     @GetMapping("/AdminList")
-    public String AdminListAllAccommodationRequests(Model model) {
-        List<AccommodationRequest> requests = accommodationRequestService.getAllAccommodationRequests();
+    public String AdminListAllAccommodationRequests(
+            @RequestParam(name = "status", required = false) String status,
+            Model model) {
+        List<AccommodationRequest> requests;
+        if (status != null && !status.isEmpty()) {
+            requests = accommodationRequestService.getAccommodationRequestsByStatus(
+                    AccommodationRequest.Status.valueOf(status.toUpperCase()));
+        } else {
+            requests = accommodationRequestService.getAllAccommodationRequests();
+        }
         model.addAttribute("requests", requests);
-        return "/accommodation/accommodation-request-list"; // Thymeleaf template name
+        model.addAttribute("selectedStatus", status);
+        return "/accommodation/accommodation-request-list";
     }
-
-
 }

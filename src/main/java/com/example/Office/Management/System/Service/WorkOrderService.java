@@ -1,5 +1,6 @@
 package com.example.Office.Management.System.Service;
 
+import com.example.Office.Management.System.Entity.User;
 import com.example.Office.Management.System.Entity.WorkOrder;
 import com.example.Office.Management.System.Repository.UserRepository;
 import com.example.Office.Management.System.Repository.WorkOrderRepository;
@@ -19,8 +20,22 @@ public class WorkOrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public WorkOrder submitWorkOrder(WorkOrder workOrder) {
+
+        // Get HR/Admin and notify them
+        User hrAdmin = getHRAdmin();
+        if (hrAdmin != null) {
+            notificationService.createNotification("New Vehicle request submitted by " + workOrder.getUser().getFullName(), hrAdmin);
+        }
         return workOrderRepository.save(workOrder);
+    }
+
+    private User getHRAdmin() {
+        return userRepository.findByRole(User.Role.ADMIN); // Assuming Role is an ENUM
+
     }
 
     public List<WorkOrder> getWorkOrdersByUser(Long userId) {
@@ -37,6 +52,8 @@ public class WorkOrderService {
         if (optionalWorkOrder.isPresent()) {
             WorkOrder workOrder = optionalWorkOrder.get();
             workOrder.setStatus(status);
+            // Notify the user
+            notificationService.createNotification("Your Vehicle request has been approved.", workOrder.getUser());
             return workOrderRepository.save(workOrder);
         } else {
             throw new RuntimeException("Work Order not found with ID: " + workOrderId);

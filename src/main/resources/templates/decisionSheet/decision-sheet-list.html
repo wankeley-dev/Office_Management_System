@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Service Requests</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Sheets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
         body {
             background-color: #f0fff0;
             font-family: sans-serif;
@@ -126,36 +126,20 @@
         }
 
         td.status-pending { color: #f39c12; font-weight: bold; }
-        td.status-in_progress { color: #3498db; font-weight: bold; }
-        td.status-completed { color: #008000; font-weight: bold; }
+        td.status-approved { color: #008000; font-weight: bold; }
         td.status-rejected { color: #e74c3c; font-weight: bold; }
+        td.status-implemented { color: #3498db; font-weight: bold; }
 
-        .actions {
-            display: flex;
-            gap: 10px;
+        a {
+            color: #008000;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s;
         }
 
-        .actions button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-        }
-
-        .actions button[type="submit"] {
-            background-color: #008000;
-            color: white;
-        }
-
-        .actions button[type="submit"]:hover {
-            background-color: #006400;
-        }
-
-        .actions button[type="submit"]:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        a:hover {
+            color: #006400;
+            text-decoration: underline;
         }
 
         footer {
@@ -168,8 +152,8 @@
 
         @media print {
             .controls-container,
-            th:nth-child(5),
-            td:nth-child(5) {
+            th:nth-child(6),
+            td:nth-child(6) {
                 display: none;
             }
             .form-container {
@@ -227,61 +211,58 @@
             td i {
                 display: none;
             }
-            .actions {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
 <body>
 
 <header>
-  <h1>All Service Requests</h1>
-  <p>Manage and review all service requests.</p>
+    <h1>All Decisions</h1>
+    <p>View and manage decision records.</p>
 </header>
 
 <main class="main-content">
-  <div class="form-container">
-    <h2>All Service Requests</h2>
+    <div class="form-container">
+        <h2>All Decisions</h2>
 
-    <div class="controls-container">
-      <button class="print-btn" onclick="window.print()">
-        <i class="fas fa-print"></i> Print
-      </button>
+        <div class="controls-container">
+            <button class="print-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th><i class="fas fa-file-alt"></i> Subject</th>
+                <th><i class="fas fa-comment"></i> Details</th>
+                <th><i class="fas fa-calendar-alt"></i> Decision Date</th>
+                <th><i class="fas fa-info-circle"></i> Status</th>
+                <th><i class="fas fa-gavel"></i> Outcome</th>
+                <th><i class="fas fa-cogs"></i> Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="decision : ${decisions}">
+                <td data-label="Subject"><i class="fas fa-file-alt"></i> <span th:text="${decision.subject}"></span></td>
+                <td data-label="Details"><i class="fas fa-comment"></i> <span th:text="${decision.details}"></span></td>
+                <td data-label="Decision Date"><i class="fas fa-calendar-alt"></i> <span th:text="${decision.decisionDate}"></span></td>
+                <td data-label="Status" th:classappend="'status-' + ${decision.status.toString().toLowerCase()}">
+                    <i class="fas fa-info-circle"></i> <span th:text="${decision.status}"></span>
+                </td>
+                <td data-label="Outcome"><i class="fas fa-gavel"></i> <span th:text="${decision.decisionOutcome}"></span></td>
+                <td data-label="Actions">
+                    <a th:href="@{/decisions/edit/{id}(id=${decision.id})}"><i class="fas fa-edit"></i> Edit</a>
+                    <a th:href="@{/decisions/delete/{id}(id=${decision.id})}" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-
-    <table>
-      <thead>
-      <tr>
-        <th><i class="fas fa-user"></i> User</th>
-        <th><i class="fas fa-concierge-bell"></i> Service Type</th>
-        <th><i class="fas fa-comment"></i> Description</th>
-        <th><i class="fas fa-info-circle"></i> Status</th>
-        <th><i class="fas fa-cogs"></i> Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="request : ${serviceRequests}">
-        <td data-label="User"><i class="fas fa-user"></i> <span th:text="${request.user.email}"></span></td>
-        <td data-label="Service Type"><i class="fas fa-concierge-bell"></i> <span th:text="${request.serviceType}"></span></td>
-        <td data-label="Description"><i class="fas fa-comment"></i> <span th:text="${request.description}"></span></td>
-        <td data-label="Status" th:classappend="'status-' + ${request.status.toString().toLowerCase()}"><i class="fas fa-info-circle"></i> <span th:text="${request.status}"></span></td>
-        <td data-label="Actions" class="actions">
-          <form th:action="@{/service-requests/{id}/approve(id=${request.id})}" method="post">
-            <button type="submit" th:disabled="${request.status == 'APPROVED'}">Approve</button>
-          </form>
-          <form th:action="@{/service-requests/{id}/reject(id=${request.id})}" method="post">
-            <button type="submit" th:disabled="${request.status == 'REJECTED'}">Reject</button>
-          </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
 </main>
 
 <footer>
-  <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
+    <p>© 2025 University of Health and Allied Sciences. All rights reserved.</p>
 </footer>
 
 </body>

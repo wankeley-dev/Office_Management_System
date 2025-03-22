@@ -19,18 +19,30 @@ public class AnnualLeaveRequestService {
     @Autowired
     private UserRepository userRepository;
 
+    // Submit a new annual leave request
     public AnnualLeaveRequest submitAnnualLeaveRequest(AnnualLeaveRequest request) {
         return annualLeaveRequestRepository.save(request);
     }
 
+    // Get all annual leave requests for a specific user
     public List<AnnualLeaveRequest> getAnnualLeaveRequestsByUser(Long userId) {
         return annualLeaveRequestRepository.findByUserId(userId);
     }
 
+    // Get all annual leave requests by employee name (case-insensitive)
+    public List<AnnualLeaveRequest> getAnnualLeaveRequestsByEmployeeName(String employeeName) {
+        if (employeeName == null || employeeName.trim().isEmpty()) {
+            return annualLeaveRequestRepository.findAll();
+        }
+        return annualLeaveRequestRepository.findByEmployeeNameContainingIgnoreCase(employeeName);
+    }
+
+    // Get all annual leave requests
     public List<AnnualLeaveRequest> getAllAnnualLeaveRequests() {
         return annualLeaveRequestRepository.findAll();
     }
 
+    // Approve an annual leave request
     @Transactional
     public AnnualLeaveRequest approveAnnualLeaveRequest(Long requestId) {
         Optional<AnnualLeaveRequest> optionalRequest = annualLeaveRequestRepository.findById(requestId);
@@ -43,6 +55,7 @@ public class AnnualLeaveRequestService {
         }
     }
 
+    // Reject an annual leave request
     public AnnualLeaveRequest rejectAnnualLeaveRequest(Long requestId) {
         Optional<AnnualLeaveRequest> optionalRequest = annualLeaveRequestRepository.findById(requestId);
         if (optionalRequest.isPresent()) {

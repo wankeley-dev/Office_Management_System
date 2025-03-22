@@ -1,6 +1,7 @@
 package com.example.Office.Management.System.Service;
 
 import com.example.Office.Management.System.Entity.SalaryAdvance;
+import com.example.Office.Management.System.Entity.User;
 import com.example.Office.Management.System.Repository.SalaryAdvanceRepository;
 import com.example.Office.Management.System.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,24 @@ public class SalaryAdvanceService {
     private SalaryAdvanceRepository salaryAdvanceRepository;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private UserRepository userRepository;
 
     public SalaryAdvance saveSalaryAdvance(SalaryAdvance salaryAdvance) {
+        // Get HR/Admin and notify them
+        User hrAdmin = getHRAdmin();
+        if (hrAdmin != null) {
+            notificationService.createNotification("New Salary Advance request submitted by " + salaryAdvance.getUser().getFullName(), hrAdmin);
+        }
+
         return salaryAdvanceRepository.save(salaryAdvance);
+    }
+
+    private User getHRAdmin() {
+        return userRepository.findByRole(User.Role.ADMIN); // Assuming Role is an ENUM
+
     }
 
     public List<SalaryAdvance> getSalaryAdvancesByUser(Long userId) {
@@ -40,6 +55,8 @@ public class SalaryAdvanceService {
             SalaryAdvance salaryAdvance = optionalSalaryAdvance.get();
             salaryAdvance.setApprovalStatus(SalaryAdvance.ApprovalStatus.valueOf(status));
             salaryAdvance.setRemarks(remarks);
+            // Notify the user
+            notificationService.createNotification("You New Message On Your Salary Advance", salaryAdvance.getUser());
             return salaryAdvanceRepository.save(salaryAdvance);
         }
         return null;

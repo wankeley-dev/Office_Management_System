@@ -72,9 +72,19 @@ public class AnnualLeaveRequestController {
     }
 
     @GetMapping("/AdminList")
-    public String AdminListAllAnnualLeaveRequests(Model model) {
-        List<AnnualLeaveRequest> leaveRequests = annualLeaveRequestService.getAllAnnualLeaveRequests();
-        model.addAttribute("leaveRequest", leaveRequests);
+    public String AdminListAllAnnualLeaveRequests(
+            @RequestParam(name = "employeeName", required = false) String employeeName,
+            Model model) {
+        List<AnnualLeaveRequest> leaveRequests;
+        if (employeeName != null && !employeeName.trim().isEmpty()) {
+            // Search by employee name
+            leaveRequests = annualLeaveRequestService.getAnnualLeaveRequestsByEmployeeName(employeeName);
+        } else {
+            // Get all leave requests if no search parameter is provided
+            leaveRequests = annualLeaveRequestService.getAllAnnualLeaveRequests();
+        }
+        model.addAttribute("leaveRequests", leaveRequests);
+        model.addAttribute("employeeName", employeeName);
         return "/leaveRequest/annualRequestsList";
     }
 }

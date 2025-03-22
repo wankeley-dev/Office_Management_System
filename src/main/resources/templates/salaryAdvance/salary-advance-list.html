@@ -25,11 +25,13 @@
 
         header h1 {
             font-size: 1.8rem;
+            margin: 0;
         }
 
         header p {
             font-size: 1rem;
             opacity: 0.9;
+            margin: 5px 0 0;
         }
 
         .main-content {
@@ -53,7 +55,33 @@
             text-align: center;
             color: #008000;
             font-size: 1.5rem;
+            margin-bottom: 25px;
+        }
+
+        .controls-container {
             margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .print-btn {
+            padding: 10px 20px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .print-btn:hover {
+            background-color: #006400;
         }
 
         table {
@@ -109,6 +137,21 @@
             color: #555;
         }
 
+        @media print {
+            .controls-container {
+                display: none;
+            }
+            .form-container {
+                box-shadow: none;
+                padding: 0;
+            }
+            header {
+                background-color: transparent;
+                color: #000;
+                box-shadow: none;
+            }
+        }
+
         @media (max-width: 768px) {
             th, td {
                 font-size: 0.85rem;
@@ -116,6 +159,9 @@
             }
             .form-container {
                 width: 95%;
+            }
+            .controls-container {
+                justify-content: center;
             }
         }
 
@@ -163,6 +209,13 @@
 <main class="main-content">
     <div class="form-container">
         <h2>All Salary Advance Requests</h2>
+
+        <div class="controls-container">
+            <button class="print-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+
         <table>
             <thead>
             <tr>

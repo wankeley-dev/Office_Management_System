@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leave Request List</title>
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
         body {
-            background-color: #f0fff0; /* Light green background */
+            background-color: #f0fff0;
             font-family: sans-serif;
             display: flex;
             flex-direction: column;
@@ -17,7 +16,7 @@
         }
 
         header {
-            background-color: #008000; /* Darker green header */
+            background-color: #008000;
             color: white;
             text-align: center;
             padding: 20px 0;
@@ -26,11 +25,13 @@
 
         header h1 {
             font-size: 1.8rem;
+            margin: 0;
         }
 
         header p {
             font-size: 1rem;
             opacity: 0.9;
+            margin: 5px 0 0;
         }
 
         .main-content {
@@ -52,12 +53,66 @@
 
         .form-container h2 {
             text-align: center;
-            color: #008000; /* Green color for the heading */
+            color: #008000;
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        /* Table Styling */
+        .controls-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-input {
+            width: 90%;
+            padding: 10px 10px 10px 35px;
+            border: 1px solid #008000;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #006400;
+            box-shadow: 0 0 5px rgba(0, 128, 0, 0.3);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #008000;
+        }
+
+        .print-btn {
+            padding: 10px 20px;
+            background-color: #008000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .print-btn:hover {
+            background-color: #006400;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -83,7 +138,7 @@
 
         th i, td i {
             margin-right: 8px;
-            color: #fff; /* White icons in header */
+            color: #fff;
         }
 
         tbody tr {
@@ -96,15 +151,13 @@
         }
 
         tbody td i {
-            color: #008000; /* Green icons in body */
+            color: #008000;
         }
 
-        /* Status Styling */
         td.status-pending { color: #f39c12; font-weight: bold; }
         td.status-approved { color: #008000; font-weight: bold; }
         td.status-rejected { color: #e74c3c; font-weight: bold; }
 
-        /* Button Styling */
         .approve-btn, .reject-btn {
             padding: 8px 12px;
             border: none;
@@ -113,11 +166,11 @@
             cursor: pointer;
             transition: background-color 0.3s;
             color: white;
+            margin: 0 2px;
         }
 
         .approve-btn {
             background-color: #008000;
-            margin-right: 5px;
         }
 
         .approve-btn:hover {
@@ -140,6 +193,25 @@
             color: #555;
         }
 
+        @media print {
+            .controls-container,
+            th:nth-child(6),
+            td:nth-child(6),
+            .approve-btn,
+            .reject-btn {
+                display: none;
+            }
+            .form-container {
+                box-shadow: none;
+                padding: 0;
+            }
+            header {
+                background-color: transparent;
+                color: #000;
+                box-shadow: none;
+            }
+        }
+
         @media (max-width: 768px) {
             th, td {
                 font-size: 0.85rem;
@@ -148,9 +220,12 @@
             .form-container {
                 width: 95%;
             }
-            .approve-btn, .reject-btn {
-                padding: 6px 10px;
-                font-size: 0.85rem;
+            .controls-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-container {
+                margin-bottom: 10px;
             }
         }
 
@@ -183,7 +258,7 @@
                 margin-right: 10px;
             }
             td i {
-                display: none; /* Hide icons in mobile view for simplicity */
+                display: none;
             }
             .approve-btn, .reject-btn {
                 width: 45%;
@@ -202,6 +277,14 @@
 <main class="main-content">
   <div class="form-container">
     <h2>Pending Leave Requests</h2>
+
+    <div class="controls-container">
+
+      <button class="print-btn" onclick="window.print()">
+        <i class="fas fa-print"></i> Print
+      </button>
+    </div>
+
     <table>
       <thead>
       <tr>
@@ -214,19 +297,24 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="request : ${leaveRequest}">
+      <tr th:each="request : ${leaveRequests}">
         <td data-label="Employee Name"><i class="fas fa-user"></i> <span th:text="${request.employeeName}"></span></td>
         <td data-label="Start Date"><i class="fas fa-calendar-day"></i> <span th:text="${request.startDate}"></span></td>
         <td data-label="End Date"><i class="fas fa-calendar-day"></i> <span th:text="${request.endDate}"></span></td>
         <td data-label="Reason"><i class="fas fa-comment"></i> <span th:text="${request.reason}"></span></td>
         <td data-label="Status" th:classappend="'status-' + ${request.status.toString().toLowerCase()}">
-          <i class="fas fa-info-circle"></i> <span th:text="${request.status}"></span></td>
+          <i class="fas fa-info-circle"></i> <span th:text="${request.status}"></span>
+        </td>
         <td data-label="Actions">
           <form th:action="@{/annual-leave-requests/{id}/approve(id=${request.id})}" method="post" style="display:inline;">
-            <button type="submit" class="approve-btn"><i class="fas fa-check"></i> Approve</button>
+            <button type="submit" class="approve-btn" th:if="${request.status.toString() == 'PENDING'}">
+              <i class="fas fa-check"></i> Approve
+            </button>
           </form>
           <form th:action="@{/annual-leave-requests/{id}/reject(id=${request.id})}" method="post" style="display:inline;">
-            <button type="submit" class="reject-btn"><i class="fas fa-times"></i> Reject</button>
+            <button type="submit" class="reject-btn" th:if="${request.status.toString() == 'PENDING'}">
+              <i class="fas fa-times"></i> Reject
+            </button>
           </form>
         </td>
       </tr>
